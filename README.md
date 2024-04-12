@@ -11,7 +11,7 @@ It connects to a robot running NAOqi using libQi.
 To support the audio features, __naoqi_driver__ opens a libQi endpoint.
 It is set by default to `127.0.0.1:0` (random port on local host),
 so it should be set with the option `qi_listen_url`,
-*e.g.* `qi_listen_url:=0.0.0.0:0` to allow collecting audio buffers remotely.
+*e.g.* `qi_listen_url:=tcp://0.0.0.0:0` to allow collecting audio buffers remotely.
 
 Audio features are enabled by default and can be disabled in
 [boot_config.json](share/boot_config.json).
@@ -105,7 +105,7 @@ The driver can be launched from a remote machine this way:
 
 ```sh
 source /opt/ros/<distro>/setup.bash # or source <ws>/install/setup.bash if built from source
-ros2 launch naoqi_driver naoqi_driver.launch.py nao_ip:=<robot_host> qi_listen_url:=0.0.0.0:0
+ros2 launch naoqi_driver naoqi_driver.launch.py nao_ip:=<robot_host> qi_listen_url:=tcp://0.0.0.0:0
 ```
 
 
@@ -115,7 +115,7 @@ Username and password arguments are required
 for robots running NAOqi 2.9 or greater:
 
 ```sh
-ros2 launch naoqi_driver naoqi_driver.launch.py nao_ip:=<robot_host> nao_username:=nao nao_password:=<robot_password> qi_listen_url:=0.0.0.0:0
+ros2 launch naoqi_driver naoqi_driver.launch.py nao_ip:=<robot_host> username:=nao password:=<robot_password> qi_listen_url:=tcp://0.0.0.0:0
 ```
 
 
@@ -154,7 +154,7 @@ ros2 node info /naoqi_driver
 Make the robot say hello:
 
 ```sh
-ros2 topic pub --once /speech std_msgs/String "data: hello"
+ros2 topic pub --once /speech std_msgs/String "{data: 'hello'}"
 ```
 
 ### Listen to words
@@ -162,8 +162,7 @@ ros2 topic pub --once /speech std_msgs/String "data: hello"
 You can setup speech recognition and get one result.
 
 ```sh
-ros2 action send_goal listen naoqi_bridge_msgs/action/Listen "expected: [\"hello\"]
-language: \"en\""
+ros2 action send_goal listen naoqi_bridge_msgs/action/Listen "{expected: ['hello'], language: 'en'}"
 ```
 
 ### Move the head
